@@ -1,3 +1,61 @@
+div,
+button,
+span,
+textarea {
+  padding: 0;
+  margin: 0;
+}
+
 body {
+  font-family: "Roboto", sans-serif;
   background-color: rgb(91, 81, 102);
+}
+.hidden {
+  display: none;
+}
+.textarea-container {
+}
+
+.textarea {
+  width: 500px;
+  height: 300px;
+  margin: auto;
+}
+/*
+.keyboard {
+  width: 1000px;
+  margin: auto;
+}*/
+.button {
+  margin: 2px;
+  height: 50px;
+  width: 50px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.Backspace {
+  width: 134px;
+}
+
+button.button.Tab {
+  width: 80px;
+}
+button.button.CapsLock {
+  width: 95px;
+}
+hiftLeft {
+  width: 110px;
+}
+button.button.ShiftLeft {
+  width: 115px;
+}
+button.button.Space {
+  width: 387px;
+}
+button.button.Enter {
+  width: 142px;
+}
+button.button.ShiftRight {
+  width: 121px;
 }

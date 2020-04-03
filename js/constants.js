@@ -649,12 +649,12 @@ const arrayKeys = [
     {
       keyCode: "Space",
       eng: {
-        down: " ",
-        up: " "
+        down: "&nbsp",
+        up: "&nbsp"
       },
       rus: {
-        down: " ",
-        up: " "
+        down: "&nbsp",
+        up: "&nbsp"
       }
     },
     {
