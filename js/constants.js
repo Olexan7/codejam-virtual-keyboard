@@ -8,7 +8,8 @@ const arrayKeys = [
       },
       rus: {
         down: "ё",
-        up: "Ё"
+        up: "Ё",
+        letter: true
       }
     },
     {
@@ -171,110 +172,130 @@ const arrayKeys = [
       keyCode: "KeyQ",
       eng: {
         down: "q",
-        up: "Q"
+        up: "Q",
+        letter: true
       },
       rus: {
         down: "й",
-        up: "Й"
+        up: "Й",
+        letter: true
       }
     },
     {
       keyCode: "KeyW",
       eng: {
         down: "w",
-        up: "W"
+        up: "W",
+        letter: true
       },
       rus: {
         down: "ц",
-        up: "Ц"
+        up: "Ц",
+        letter: true
       }
     },
     {
       keyCode: "KeyE",
       eng: {
         down: "e",
-        up: "E"
+        up: "E",
+        letter: true
       },
       rus: {
         down: "у",
-        up: "У"
+        up: "У",
+        letter: true
       }
     },
     {
       keyCode: "KeyR",
       eng: {
         down: "r",
-        up: "R"
+        up: "R",
+        letter: true
       },
       rus: {
         down: "к",
-        up: "К"
+        up: "К",
+        letter: true
       }
     },
     {
       keyCode: "KeyT",
       eng: {
         down: "t",
-        up: "T"
+        up: "T",
+        letter: true
       },
       rus: {
         down: "е",
-        up: "Е"
+        up: "Е",
+        letter: true
       }
     },
     {
       keyCode: "KeyY",
       eng: {
         down: "y",
-        up: "Y"
+        up: "Y",
+        letter: true
       },
       rus: {
         down: "н",
-        up: "Н"
+        up: "Н",
+        letter: true
       }
     },
     {
       keyCode: "KeyU",
       eng: {
         down: "u",
-        up: "U"
+        up: "U",
+        letter: true
       },
       rus: {
         down: "г",
-        up: "Г"
+        up: "Г",
+        letter: true
       }
     },
     {
       keyCode: "KeyI",
       eng: {
         down: "i",
-        up: "I"
+        up: "I",
+        letter: true
       },
       rus: {
         down: "ш",
-        up: "Ш"
+        up: "Ш",
+        letter: true
       }
     },
     {
       keyCode: "KeyO",
       eng: {
         down: "o",
-        up: "O"
+        up: "O",
+        letter: true
       },
       rus: {
         down: "щ",
-        up: "Щ"
+        up: "Щ",
+        letter: true
       }
     },
     {
       keyCode: "KeyP",
       eng: {
         down: "p",
-        up: "P"
+        up: "P",
+        letter: true
       },
       rus: {
         down: "з",
-        up: "З"
+        up: "З",
+        letter: true
       }
     },
     {
@@ -285,7 +306,8 @@ const arrayKeys = [
       },
       rus: {
         down: "х",
-        up: "Х"
+        up: "Х",
+        letter: true
       }
     },
     {
@@ -296,7 +318,8 @@ const arrayKeys = [
       },
       rus: {
         down: "ъ",
-        up: "Ъ"
+        up: "Ъ",
+        letter: true
       }
     },
     {
@@ -338,99 +361,117 @@ const arrayKeys = [
       keyCode: "KeyA",
       eng: {
         down: "a",
-        up: "A"
+        up: "A",
+        letter: true
       },
       rus: {
         down: "ф",
-        up: "Ф"
+        up: "Ф",
+        letter: true
       }
     },
     {
       keyCode: "KeyS",
       eng: {
         down: "s",
-        up: "S"
+        up: "S",
+        letter: true
       },
       rus: {
         down: "ы",
-        up: "Ы"
+        up: "Ы",
+        letter: true
       }
     },
     {
       keyCode: "KeyD",
       eng: {
         down: "d",
-        up: "D"
+        up: "D",
+        letter: true
       },
       rus: {
         down: "в",
-        up: "В"
+        up: "В",
+        letter: true
       }
     },
     {
       keyCode: "KeyF",
       eng: {
         down: "f",
-        up: "F"
+        up: "F",
+        letter: true
       },
       rus: {
         down: "а",
-        up: "А"
+        up: "А",
+        letter: true
       }
     },
     {
       keyCode: "KeyG",
       eng: {
         down: "g",
-        up: "G"
+        up: "G",
+        letter: true
       },
       rus: {
         down: "п",
-        up: "П"
+        up: "П",
+        letter: true
       }
     },
     {
       keyCode: "KeyH",
       eng: {
         down: "h",
-        up: "H"
+        up: "H",
+        letter: true
       },
       rus: {
         down: "р",
-        up: "Р"
+        up: "Р",
+        letter: true
       }
     },
     {
       keyCode: "KeyJ",
       eng: {
         down: "j",
-        up: "J"
+        up: "J",
+        letter: true
       },
       rus: {
         down: "о",
-        up: "О"
+        up: "О",
+        letter: true
       }
     },
     {
       keyCode: "KeyK",
       eng: {
         down: "k",
-        up: "K"
+        up: "K",
+        letter: true
       },
       rus: {
         down: "л",
-        up: "Л"
+        up: "Л",
+        letter: true
       }
     },
     {
       keyCode: "KeyL",
       eng: {
         down: "l",
-        up: "L"
+        up: "L",
+        letter: true
       },
       rus: {
         down: "д",
-        up: "Д"
+        up: "Д",
+        letter: true
       }
     },
     {
@@ -441,7 +482,8 @@ const arrayKeys = [
       },
       rus: {
         down: "ж",
-        up: "Ж"
+        up: "Ж",
+        letter: true
       }
     },
     {
@@ -452,7 +494,8 @@ const arrayKeys = [
       },
       rus: {
         down: "э",
-        up: "Э"
+        up: "Э",
+        letter: true
       }
     },
     {
@@ -483,77 +526,91 @@ const arrayKeys = [
       keyCode: "KeyZ",
       eng: {
         down: "z",
-        up: "Z"
+        up: "Z",
+        letter: true
       },
       rus: {
         down: "я",
-        up: "Я"
+        up: "Я",
+        letter: true
       }
     },
     {
       keyCode: "KeyX",
       eng: {
         down: "x",
-        up: "X"
+        up: "X",
+        letter: true
       },
       rus: {
         down: "ч",
-        up: "Ч"
+        up: "Ч",
+        letter: true
       }
     },
     {
       keyCode: "KeyC",
       eng: {
         down: "c",
-        up: "C"
+        up: "C",
+        letter: true
       },
       rus: {
         down: "с",
-        up: "С"
+        up: "С",
+        letter: true
       }
     },
     {
       keyCode: "KeyV",
       eng: {
         down: "v",
-        up: "V"
+        up: "V",
+        letter: true
       },
       rus: {
         down: "м",
-        up: "М"
+        up: "М",
+        letter: true
       }
     },
     {
       keyCode: "KeyB",
       eng: {
         down: "b",
-        up: "B"
+        up: "B",
+        letter: true
       },
       rus: {
         down: "и",
-        up: "И"
+        up: "И",
+        letter: true
       }
     },
     {
       keyCode: "KeyN",
       eng: {
         down: "n",
-        up: "N"
+        up: "N",
+        letter: true
       },
       rus: {
         down: "т",
-        up: "Т"
+        up: "Т",
+        letter: true
       }
     },
     {
       keyCode: "KeyM",
       eng: {
         down: "m",
-        up: "M"
+        up: "M",
+        letter: true
       },
       rus: {
         down: "ь",
-        up: "Ь"
+        up: "Ь",
+        letter: true
       }
     },
     {
@@ -564,7 +621,8 @@ const arrayKeys = [
       },
       rus: {
         down: "б",
-        up: "Б"
+        up: "Б",
+        letter: true
       }
     },
     {
@@ -575,7 +633,8 @@ const arrayKeys = [
       },
       rus: {
         down: "ю",
-        up: "Ю"
+        up: "Ю",
+        letter: true
       }
     },
     {
@@ -714,3 +773,10 @@ const arrayKeys = [
     }
   ]
 ];
+
+const arrayForButton = arrayKeys[0].concat(
+  arrayKeys[1],
+  arrayKeys[2],
+  arrayKeys[3],
+  arrayKeys[4]
+);

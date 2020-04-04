@@ -5,20 +5,40 @@ document.addEventListener("DOMContentLoaded", () => {
   };
   let textArea = new TextArea();
   let virtualKeyBoard = new VirtualKeyBoard(options);
+  let realKeyBoard = new RealKeyBoard();
 
   textArea.create();
   virtualKeyBoard.create();
 
-  let keyboard = document.querySelector(".keyboard");
+  let html = document.querySelector("html");
   let keyValue;
-  keyboard.addEventListener("mousedown", event => {
-    if (event.target.tagName == "BUTTON" || event.target.tagName == "SPAN") {
+  html.addEventListener("mousedown", event => {
+    if (event.target.tagName == "BUTTON") {
       keyValue = virtualKeyBoard.mouseDownHandler(event);
       textArea.displayValue(keyValue);
     }
   });
-  keyboard.addEventListener("mouseup", event => {
-    virtualKeyBoard.mouseUpHandler(event, keyValue);
+  html.addEventListener("mouseup", event => {
+    if (event.target.tagName == "BUTTON") {
+      virtualKeyBoard.mouseUpHandler(event, keyValue);
+    }
+  });
+
+  html.addEventListener("keydown", event => {
+    if (event.ctrlKey && event.shiftKey) {
+      virtualKeyBoard.setLanguage();
+    }
+
+    virtualKeyBoard.keyDownHandler(event);
+    let keyObject = realKeyBoard.getKeyCode(event);
+    virtualKeyBoard.activateButton(keyObject);
+    let keyValue = document.querySelector(`.${keyObject.code}`).innerText;
+    textArea.displayValue(keyValue);
+  });
+  html.addEventListener("keyup", event => {
+    virtualKeyBoard.keyUpHandler(event);
+    let keyObject = realKeyBoard.getKeyCode(event);
+    virtualKeyBoard.deActivateButton(keyObject);
   });
 });
 
@@ -37,12 +57,13 @@ class TextArea {
     let textArea = document.querySelector(".textarea");
     switch (keyValue) {
       case "Tab":
-        keyValue = "    ";
+        textArea.value += "    ";
         break;
       case "Backspace":
         textArea.value = textArea.value.slice(0, -1);
         break;
       case "Del":
+      case "Delete":
         /***NOT READY */
         let positionCursor = textArea.selectionEnd;
         let start = textArea.value.substr(0, positionCursor);
@@ -55,6 +76,7 @@ class TextArea {
       case "CapsLock":
       case "Shift":
       case "Ctrl":
+      case "Control":
       case "Win":
       case "Alt":
         //NOOP
@@ -82,7 +104,8 @@ class VirtualKeyBoard {
       arrayRow.forEach(element => {
         let button = document.createElement("button");
         button.classList.add("button", element.keyCode);
-        button.appendChild(this.generateSpanBlock(element));
+        button.innerHTML = this.buttonValue(element);
+        // button.appendChild(this.generateSpanBlock(element));
         rowBlock.appendChild(button);
       });
       keyboardBlock.appendChild(rowBlock);
@@ -91,91 +114,112 @@ class VirtualKeyBoard {
   };
 
   mouseDownHandler = event => {
-    let spanCase = Array.from(document.querySelectorAll(".case"));
+    let buttonCase = Array.from(document.querySelectorAll(".button"));
     let keyValue = event.target.innerText;
-    let keyBlock = document.querySelector(".keyboard");
     event.target.classList.add("active");
     switch (keyValue) {
       case "CapsLock":
-      //this.eventCaps(keyBlock, spanCase);
+        this.eventCaps(buttonCase);
+        break;
       case "Shift":
-        this.eventShift(spanCase);
+        this.eventShift(buttonCase);
+        break;
     }
     return keyValue;
   };
 
   mouseUpHandler = (event, keyValue) => {
-    let spanCase = Array.from(document.querySelectorAll(".case"));
+    //let spanCase = Array.from(document.querySelectorAll(".case"));
+    let buttonCase = Array.from(document.querySelectorAll(".button"));
     event.target.classList.remove("active");
-    if (keyValue == "Shift") {
-      this.eventShift(spanCase);
-    } else if (keyValue == "CapsLock") {
-      this.eventCaps(spanCase);
+    switch (keyValue) {
+      case "Shift":
+        this.eventShift(buttonCase);
+        break;
+      case "CapsLock":
+        // this.eventCapsDown(buttonCase);
+        break;
     }
   };
 
-  eventCaps = (/*keyBlock,*/ spanCase) => {
+  keyDownHandler = event => {
+    let buttonCase = Array.from(document.querySelectorAll(".button"));
+    switch (event.key) {
+      case "Shift":
+        this.eventShift(buttonCase);
+        break;
+      case "CapsLock":
+        this.eventCaps(buttonCase);
+        break;
+    }
+  };
+
+  keyUpHandler = event => {
+    let buttonCase = Array.from(document.querySelectorAll(".button"));
+    switch (event.key) {
+      case "Shift":
+        this.eventShift(buttonCase);
+        break;
+    }
+  };
+
+  setLanguage = () => {
+    if (this.language == "eng") {
+      this.language = "rus";
+    } else if (this.language == "rus") {
+      this.language = "eng";
+    }
+    let buttonArray = Array.from(document.querySelectorAll(".button"));
+    for (let i = 0; i < buttonArray.length; i++) {
+      buttonArray[i].innerHTML = this.buttonValue(arrayForButton[i]);
+    }
+  };
+
+  activateButton = keyObject => {
+    document.querySelector(`.${keyObject.code}`).classList.add("active");
+  };
+  deActivateButton = keyObject => {
+    document.querySelector(`.${keyObject.code}`).classList.remove("active");
+  };
+
+  eventCaps = buttonCase => {
     let caps = document.querySelector(".CapsLock");
-    caps.classList.toggle("active");
-    /*spanCase.forEach(element => {
-      console.log(element);
-      element.classList.toogle("hidden");
-    });*/
+    caps.classList.remove("active");
   };
 
-  eventShift = spanCase => {
-    spanCase.forEach(element => {
-      element.classList.toggle("hidden");
-    });
+  eventShift = buttonCase => {
+    if (this.caseStatus == "up") {
+      this.caseStatus = "down";
+    } else if (this.caseStatus == "down") {
+      this.caseStatus = "up";
+    }
+    for (let i = 0; i < buttonCase.length; i++) {
+      buttonCase[i].innerHTML = this.buttonValue(arrayForButton[i]);
+    }
   };
 
-  generateSpanBlock = objectKey => {
-    let spanBlock = document.createDocumentFragment("div");
-    let spanEng = document.createElement("span");
-    let spanRus = document.createElement("span");
-    spanEng.classList.add("eng", "span");
-    spanRus.classList.add("rus", "span");
-
+  buttonValue = element => {
     switch (this.language) {
       case "eng":
-        spanRus.classList.add("hidden");
-        break;
+        switch (this.caseStatus) {
+          case "up":
+            return element.eng.up;
+          case "down":
+            return element.eng.down;
+        }
       case "rus":
-        spanEng.classList.add("hidden");
-        break;
+        switch (this.caseStatus) {
+          case "up":
+            return element.rus.up;
+          case "down":
+            return element.rus.down;
+        }
     }
-
-    let spanArray = [];
-    for (let i = 0; i < 4; i++) {
-      spanArray.push(document.createElement("span"));
-      if (i % 2 == 0) {
-        spanArray[i].classList.add(/*"up", */ "case");
-      } else {
-        spanArray[i].classList.add(/*"down",*/ "case");
-      }
-    }
-    switch (this.caseStatus) {
-      case "up":
-        spanArray[1].classList.add("hidden");
-        spanArray[3].classList.add("hidden");
-        break;
-      case "down":
-        spanArray[0].classList.add("hidden");
-        spanArray[2].classList.add("hidden");
-        break;
-    }
-
-    spanArray[0].innerHTML = objectKey.eng.up;
-    spanArray[1].innerHTML = objectKey.eng.down;
-    spanEng.append(spanArray[0], spanArray[1]);
-
-    spanArray[2].innerHTML = objectKey.rus.up;
-    spanArray[3].innerHTML = objectKey.rus.down;
-    spanRus.append(spanArray[2], spanArray[3]);
-
-    spanBlock.append(spanEng, spanRus);
-    return spanBlock;
   };
 }
 
-class RealKeyBoard {}
+class RealKeyBoard {
+  getKeyCode = event => {
+    return { key: event.key, code: event.code };
+  };
+}
