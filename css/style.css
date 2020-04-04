@@ -40,7 +40,9 @@ body {
 .Backspace {
   width: 134px;
 }
-
+.caps {
+  background-color: green;
+}
 button.button.Tab {
   width: 80px;
 }

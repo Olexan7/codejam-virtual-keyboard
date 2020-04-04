@@ -1,11 +1,12 @@
 document.addEventListener("DOMContentLoaded", () => {
+  let localLang = localStorage.getItem("lang") == "rus" ? "rus" : "eng";
   let options = {
-    lang: "eng",
-    case: "down"
+    lang: localLang,
+    case: "down",
+    letterCase: "under"
   };
   let textArea = new TextArea();
   let virtualKeyBoard = new VirtualKeyBoard(options);
-  let realKeyBoard = new RealKeyBoard();
 
   textArea.create();
   virtualKeyBoard.create();
@@ -24,22 +25,37 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
+  //let flagNoRepeat = true;
   html.addEventListener("keydown", event => {
-    if (event.ctrlKey && event.shiftKey) {
-      virtualKeyBoard.setLanguage();
+    if (!event.repeat) {
+      if (event.ctrlKey && event.shiftKey) {
+        virtualKeyBoard.setLanguage();
+      }
+      if (checkValidateButton(event.code)) {
+        virtualKeyBoard.keyDownHandler(event);
+        virtualKeyBoard.activateButton(event);
+        let keyValue = document.querySelector(`.${event.code}`).innerText;
+        textArea.displayValue(keyValue);
+      }
     }
-
-    virtualKeyBoard.keyDownHandler(event);
-    let keyObject = realKeyBoard.getKeyCode(event);
-    virtualKeyBoard.activateButton(keyObject);
-    let keyValue = document.querySelector(`.${keyObject.code}`).innerText;
-    textArea.displayValue(keyValue);
   });
   html.addEventListener("keyup", event => {
-    virtualKeyBoard.keyUpHandler(event);
-    let keyObject = realKeyBoard.getKeyCode(event);
-    virtualKeyBoard.deActivateButton(keyObject);
+    event.repeat = false;
+    if (checkValidateButton(event.code)) {
+      virtualKeyBoard.keyUpHandler(event);
+      virtualKeyBoard.deActivateButton(event);
+    }
   });
+
+  checkValidateButton = buttonClick => {
+    let flag = false;
+    arrayForButton.forEach(element => {
+      if (element.keyCode == buttonClick) {
+        flag = true;
+      }
+    });
+    return flag;
+  };
 });
 
 class TextArea {
@@ -88,11 +104,10 @@ class TextArea {
   };
 }
 class VirtualKeyBoard {
-  //spanCase = Array.from(document.querySelectorAll(".case"));
-
   constructor(options) {
     this.language = options.lang;
     this.caseStatus = options.case;
+    this.letterCase = options.letterCase;
   }
 
   create = () => {
@@ -105,7 +120,6 @@ class VirtualKeyBoard {
         let button = document.createElement("button");
         button.classList.add("button", element.keyCode);
         button.innerHTML = this.buttonValue(element);
-        // button.appendChild(this.generateSpanBlock(element));
         rowBlock.appendChild(button);
       });
       keyboardBlock.appendChild(rowBlock);
@@ -114,42 +128,35 @@ class VirtualKeyBoard {
   };
 
   mouseDownHandler = event => {
-    let buttonCase = Array.from(document.querySelectorAll(".button"));
     let keyValue = event.target.innerText;
     event.target.classList.add("active");
     switch (keyValue) {
       case "CapsLock":
-        this.eventCaps(buttonCase);
+        this.eventCaps();
         break;
       case "Shift":
-        this.eventShift(buttonCase);
+        this.eventShift();
         break;
     }
     return keyValue;
   };
 
   mouseUpHandler = (event, keyValue) => {
-    //let spanCase = Array.from(document.querySelectorAll(".case"));
-    let buttonCase = Array.from(document.querySelectorAll(".button"));
     event.target.classList.remove("active");
     switch (keyValue) {
       case "Shift":
-        this.eventShift(buttonCase);
-        break;
-      case "CapsLock":
-        // this.eventCapsDown(buttonCase);
+        this.eventShift();
         break;
     }
   };
 
   keyDownHandler = event => {
-    let buttonCase = Array.from(document.querySelectorAll(".button"));
     switch (event.key) {
       case "Shift":
-        this.eventShift(buttonCase);
+        this.eventShift();
         break;
       case "CapsLock":
-        this.eventCaps(buttonCase);
+        this.eventCaps();
         break;
     }
   };
@@ -164,11 +171,8 @@ class VirtualKeyBoard {
   };
 
   setLanguage = () => {
-    if (this.language == "eng") {
-      this.language = "rus";
-    } else if (this.language == "rus") {
-      this.language = "eng";
-    }
+    this.language = this.language == "eng" ? "rus" : "eng";
+    localStorage.setItem("lang", this.language);
     let buttonArray = Array.from(document.querySelectorAll(".button"));
     for (let i = 0; i < buttonArray.length; i++) {
       buttonArray[i].innerHTML = this.buttonValue(arrayForButton[i]);
@@ -182,17 +186,24 @@ class VirtualKeyBoard {
     document.querySelector(`.${keyObject.code}`).classList.remove("active");
   };
 
-  eventCaps = buttonCase => {
+  eventCaps = () => {
+    let buttonCase = Array.from(document.querySelectorAll(".button"));
     let caps = document.querySelector(".CapsLock");
     caps.classList.remove("active");
+    caps.classList.toggle("caps");
+    this.editLaterCase();
+    for (let i = 0; i < buttonCase.length; i++) {
+      buttonCase[i].innerHTML = this.buttonValue(arrayForButton[i]);
+    }
   };
 
-  eventShift = buttonCase => {
-    if (this.caseStatus == "up") {
-      this.caseStatus = "down";
-    } else if (this.caseStatus == "down") {
-      this.caseStatus = "up";
-    }
+  eventShift = () => {
+    let buttonCase = Array.from(document.querySelectorAll(".button"));
+    this.caseStatus =
+      this.caseStatus == "up"
+        ? (this.caseStatus = "down")
+        : (this.caseStatus = "up");
+    this.editLaterCase();
     for (let i = 0; i < buttonCase.length; i++) {
       buttonCase[i].innerHTML = this.buttonValue(arrayForButton[i]);
     }
@@ -203,23 +214,48 @@ class VirtualKeyBoard {
       case "eng":
         switch (this.caseStatus) {
           case "up":
-            return element.eng.up;
+            return this.englElementValue(element);
           case "down":
-            return element.eng.down;
+            return this.englElementValue(element);
         }
       case "rus":
         switch (this.caseStatus) {
           case "up":
-            return element.rus.up;
+            return this.rusElementValue(element);
           case "down":
-            return element.rus.down;
+            return this.rusElementValue(element);
         }
     }
   };
-}
 
-class RealKeyBoard {
-  getKeyCode = event => {
-    return { key: event.key, code: event.code };
+  editLaterCase = () => {
+    this.letterCase =
+      this.letterCase == "over"
+        ? (this.letterCase = "under")
+        : (this.letterCase = "over");
+  };
+  rusElementValue = element => {
+    if (element.rus.letter) {
+      switch (this.letterCase) {
+        case "over":
+          return element.rus.up;
+        case "under":
+          return element.rus.down;
+      }
+    } else {
+      return element.rus.down;
+    }
+  };
+  englElementValue = element => {
+    if (element.eng.letter) {
+      switch (this.letterCase) {
+        case "over":
+          return element.eng.up;
+        case "under":
+          return element.eng.down;
+      }
+    } else {
+      return element.eng.down;
+    }
   };
 }
