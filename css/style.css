@@ -1,66 +1,104 @@
 div,
 button,
-span,
-textarea {
+textarea,
+p {
   padding: 0;
-  margin: 0;
+  margin: 0 auto;
 }
 
 body {
   font-family: "Roboto", sans-serif;
   background-color: rgb(91, 81, 102);
 }
-.hidden {
-  display: none;
-}
-.active {
-  background-color: red;
-}
+
 .textarea-container {
+  width: 815px;
+  margin-bottom: 10px;
 }
 
 .textarea {
-  width: 500px;
+  width: 810px;
   height: 150px;
   margin: auto;
+  background-color: #d2d2d2;
+  font-size: 20px;
+  font-family: "Roboto", sans-serif;
+  border-radius: 4px;
 }
-/*
+.textarea:focus {
+  outline: none;
+}
+
 .keyboard {
-  width: 1000px;
+  width: 816px;
   margin: auto;
-}*/
+  background-color: #000000;
+}
+
 .button {
-  margin: 2px;
+  margin: 1px;
   height: 50px;
   width: 50px;
-  border-radius: 5px;
   cursor: pointer;
+  background-color: #302f36;
+  font-size: 17px;
+  border: none;
+  outline: none;
+  color: white;
+  transition: 0.2s;
+}
+.special {
+  background-color: #1b1b1d;
+}
+.activeButton {
+  font-weight: bold;
+  background-color: #e7e4e7;
+  color: #454245;
+}
+
+.key:hover {
+  background-color: #255344;
+  font-weight: bold;
+}
+
+p {
+  width: 600px;
+  font-weight: 500;
+  text-align: center;
+  color: #e7e4e7;
+  margin: 20px auto;
 }
 
 .Backspace {
-  width: 134px;
+  width: 138px;
 }
 .caps {
-  background-color: green;
+  border: 3px solid thistle;
+  border-radius: 4px;
+  font-weight: bold;
 }
-button.button.Tab {
+.Tab {
   width: 80px;
 }
-button.button.CapsLock {
-  width: 95px;
+.Delete {
+  width: 56px;
 }
-hiftLeft {
+.CapsLock {
+  position: relative;
   width: 110px;
 }
-button.button.ShiftLeft {
-  width: 115px;
+.ShiftLeft {
+  width: 134px;
 }
-button.button.Space {
-  width: 387px;
+.Space {
+  width: 394px;
 }
-button.button.Enter {
-  width: 142px;
+.Enter {
+  width: 130px;
 }
-button.button.ShiftRight {
-  width: 121px;
+.ShiftRight {
+  width: 106px;
+}
+.ControlRight {
+  width: 54px;
 }

@@ -780,3 +780,22 @@ const arrayForButton = arrayKeys[0].concat(
   arrayKeys[3],
   arrayKeys[4]
 );
+
+const special = [
+  "Backspace",
+  "Tab",
+  "Enter",
+  "CapsLock",
+  "ShiftLeft",
+  "ShiftRight",
+  "AltLeft",
+  "AltRight",
+  "ControlLeft",
+  "ControlRight",
+  "MetaLeft",
+  "Delete",
+  "ArrowLeft",
+  "ArrowDown",
+  "ArrowRight",
+  "ArrowUp"
+];

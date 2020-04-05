@@ -10,6 +10,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
   textArea.create();
   virtualKeyBoard.create();
+  virtualKeyBoard.messegeBlock();
+
+  setCursor = () => {
+    textArea.setCaretPosition();
+  };
+  setInterval(() => setCursor());
 
   let html = document.querySelector("html");
   let keyValue;
@@ -25,13 +31,13 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  //let flagNoRepeat = true;
   html.addEventListener("keydown", event => {
     if (!event.repeat) {
-      if (event.ctrlKey && event.shiftKey) {
+      if (event.altKey && event.shiftKey) {
         virtualKeyBoard.setLanguage();
       }
       if (checkValidateButton(event.code)) {
+        event.preventDefault();
         virtualKeyBoard.keyDownHandler(event);
         virtualKeyBoard.activateButton(event);
         let keyValue = document.querySelector(`.${event.code}`).innerText;
@@ -40,7 +46,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
   html.addEventListener("keyup", event => {
-    event.repeat = false;
     if (checkValidateButton(event.code)) {
       virtualKeyBoard.keyUpHandler(event);
       virtualKeyBoard.deActivateButton(event);
@@ -71,23 +76,33 @@ class TextArea {
 
   displayValue = keyValue => {
     let textArea = document.querySelector(".textarea");
+    textArea.disabled - false;
+    let text = textArea.value;
+    let positionCursor = this.position;
     switch (keyValue) {
       case "Tab":
         textArea.value += "    ";
         break;
       case "Backspace":
-        textArea.value = textArea.value.slice(0, -1);
+        positionCursor != 0 &&
+          (textArea.value =
+            text.slice(0, positionCursor - 1) + text.substring(positionCursor));
+        this.setCursorPos(textArea, positionCursor - 1);
         break;
       case "Del":
       case "Delete":
-        /***NOT READY */
-        let positionCursor = textArea.selectionEnd;
-        let start = textArea.value.substr(0, positionCursor);
-        let end = textArea.value.substr(positionCursor + 1);
-        textArea.value = start + end;
+        textArea.value =
+          text.slice(0, positionCursor) + text.substring(positionCursor + 1);
+        this.setCursorPos(textArea, positionCursor);
         break;
       case "Enter":
         textArea.value += "\n";
+        break;
+      case "◄":
+        positionCursor != 0 && this.setCursorPos(textArea, positionCursor - 1);
+        break;
+      case "►":
+        this.setCursorPos(textArea, positionCursor + 1);
         break;
       case "CapsLock":
       case "Shift":
@@ -98,8 +113,46 @@ class TextArea {
         //NOOP
         break;
       default:
-        textArea.value += keyValue;
+        textArea.value =
+          text.slice(0, positionCursor) +
+          keyValue +
+          text.substring(positionCursor);
+        this.setCursorPos(textArea, positionCursor + 1);
         break;
+    }
+  };
+
+  setCaretPosition = () => {
+    this.position = this.getCaretPos(document.querySelector(".textarea"));
+  };
+
+  getCaretPos = obj => {
+    obj.focus();
+    if (obj.selectionStart) return obj.selectionStart;
+    else if (document.selection) {
+      var sel = document.selection.createRange();
+      var clone = sel.duplicate();
+      sel.collapse(true);
+      clone.moveToElementText(obj);
+      clone.setEndPoint("EndToEnd", sel);
+      return clone.text.length;
+    }
+    return 0;
+  };
+
+  setCursorPos = (input, start) => {
+    let end = start;
+    if ("selectionStart" in input) {
+      setTimeout(function() {
+        input.selectionStart = start;
+        input.selectionEnd = end;
+      }, 1);
+    } else if (input.createTextRange) {
+      var rng = input.createTextRange();
+      rng.moveStart("character", start);
+      rng.collapse();
+      rng.moveEnd("character", end - start);
+      rng.select();
     }
   };
 }
@@ -118,8 +171,10 @@ class VirtualKeyBoard {
       let rowBlock = document.createElement("div");
       arrayRow.forEach(element => {
         let button = document.createElement("button");
-        button.classList.add("button", element.keyCode);
+        button.classList.add("key", "button", element.keyCode);
         button.innerHTML = this.buttonValue(element);
+        special.indexOf(element.keyCode) != -1 &&
+          button.classList.add("special");
         rowBlock.appendChild(button);
       });
       keyboardBlock.appendChild(rowBlock);
@@ -129,7 +184,8 @@ class VirtualKeyBoard {
 
   mouseDownHandler = event => {
     let keyValue = event.target.innerText;
-    event.target.classList.add("active");
+    event.target.classList.remove("key");
+    event.target.classList.add("activeButton");
     switch (keyValue) {
       case "CapsLock":
         this.eventCaps();
@@ -142,7 +198,8 @@ class VirtualKeyBoard {
   };
 
   mouseUpHandler = (event, keyValue) => {
-    event.target.classList.remove("active");
+    event.target.classList.remove("activeButton");
+    event.target.classList.add("key");
     switch (keyValue) {
       case "Shift":
         this.eventShift();
@@ -151,6 +208,7 @@ class VirtualKeyBoard {
   };
 
   keyDownHandler = event => {
+    event.target.classList.remove("key");
     switch (event.key) {
       case "Shift":
         this.eventShift();
@@ -162,10 +220,10 @@ class VirtualKeyBoard {
   };
 
   keyUpHandler = event => {
-    let buttonCase = Array.from(document.querySelectorAll(".button"));
+    event.target.tagName == "BUTTON" && event.target.classList.add("key");
     switch (event.key) {
       case "Shift":
-        this.eventShift(buttonCase);
+        this.eventShift();
         break;
     }
   };
@@ -180,10 +238,12 @@ class VirtualKeyBoard {
   };
 
   activateButton = keyObject => {
-    document.querySelector(`.${keyObject.code}`).classList.add("active");
+    document.querySelector(`.${keyObject.code}`).classList.add("activeButton");
   };
   deActivateButton = keyObject => {
-    document.querySelector(`.${keyObject.code}`).classList.remove("active");
+    document
+      .querySelector(`.${keyObject.code}`)
+      .classList.remove("activeButton");
   };
 
   eventCaps = () => {
@@ -214,14 +274,14 @@ class VirtualKeyBoard {
       case "eng":
         switch (this.caseStatus) {
           case "up":
-            return this.englElementValue(element);
+            return this.englElementValue(element, "up");
           case "down":
             return this.englElementValue(element);
         }
       case "rus":
         switch (this.caseStatus) {
           case "up":
-            return this.rusElementValue(element);
+            return this.rusElementValue(element, "up");
           case "down":
             return this.rusElementValue(element);
         }
@@ -234,7 +294,13 @@ class VirtualKeyBoard {
         ? (this.letterCase = "under")
         : (this.letterCase = "over");
   };
-  rusElementValue = element => {
+  editLaterCase = () => {
+    this.letterCase =
+      this.letterCase == "over"
+        ? (this.letterCase = "under")
+        : (this.letterCase = "over");
+  };
+  rusElementValue = (element, caseRus) => {
     if (element.rus.letter) {
       switch (this.letterCase) {
         case "over":
@@ -243,10 +309,10 @@ class VirtualKeyBoard {
           return element.rus.down;
       }
     } else {
-      return element.rus.down;
+      return caseRus == "up" ? element.eng.up : element.eng.down;
     }
   };
-  englElementValue = element => {
+  englElementValue = (element, caseEng) => {
     if (element.eng.letter) {
       switch (this.letterCase) {
         case "over":
@@ -255,7 +321,14 @@ class VirtualKeyBoard {
           return element.eng.down;
       }
     } else {
-      return element.eng.down;
+      return caseEng == "up" ? element.eng.up : element.eng.down;
     }
+  };
+  messegeBlock = () => {
+    let os = document.createElement("p");
+    os.innerHTML = "Клавиатура создана в операционной системе Windows";
+    let lang = document.createElement("p");
+    lang.innerHTML = "Переключение языка комбинацией: Alt + Shift";
+    document.body.append(os, lang);
   };
 }
