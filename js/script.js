@@ -3,7 +3,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let options = {
     lang: localLang,
     case: "down",
-    letterCase: "under"
+    letterCase: "under",
   };
   let textArea = new TextArea();
   let virtualKeyBoard = new VirtualKeyBoard(options);
@@ -19,19 +19,19 @@ document.addEventListener("DOMContentLoaded", () => {
 
   let html = document.querySelector("html");
   let keyValue;
-  html.addEventListener("mousedown", event => {
+  html.addEventListener("mousedown", (event) => {
     if (event.target.tagName == "BUTTON") {
       keyValue = virtualKeyBoard.mouseDownHandler(event);
       textArea.displayValue(keyValue);
     }
   });
-  html.addEventListener("mouseup", event => {
+  html.addEventListener("mouseup", (event) => {
     if (event.target.tagName == "BUTTON") {
       virtualKeyBoard.mouseUpHandler(event, keyValue);
     }
   });
 
-  html.addEventListener("keydown", event => {
+  html.addEventListener("keydown", (event) => {
     if (!event.repeat) {
       if (event.altKey && event.shiftKey) {
         virtualKeyBoard.setLanguage();
@@ -45,16 +45,16 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     }
   });
-  html.addEventListener("keyup", event => {
+  html.addEventListener("keyup", (event) => {
     if (checkValidateButton(event.code)) {
       virtualKeyBoard.keyUpHandler(event);
       virtualKeyBoard.deActivateButton(event);
     }
   });
 
-  checkValidateButton = buttonClick => {
+  checkValidateButton = (buttonClick) => {
     let flag = false;
-    arrayForButton.forEach(element => {
+    arrayForButton.forEach((element) => {
       if (element.keyCode == buttonClick) {
         flag = true;
       }
@@ -74,7 +74,7 @@ class TextArea {
     document.body.appendChild(divBlock);
   };
 
-  displayValue = keyValue => {
+  displayValue = (keyValue) => {
     let textArea = document.querySelector(".textarea");
     textArea.disabled - false;
     let text = textArea.value;
@@ -126,7 +126,7 @@ class TextArea {
     this.position = this.getCaretPos(document.querySelector(".textarea"));
   };
 
-  getCaretPos = obj => {
+  getCaretPos = (obj) => {
     obj.focus();
     if (obj.selectionStart) return obj.selectionStart;
     else if (document.selection) {
@@ -143,7 +143,7 @@ class TextArea {
   setCursorPos = (input, start) => {
     let end = start;
     if ("selectionStart" in input) {
-      setTimeout(function() {
+      setTimeout(function () {
         input.selectionStart = start;
         input.selectionEnd = end;
       }, 1);
@@ -167,9 +167,9 @@ class VirtualKeyBoard {
     let keyboardBlock = document.createElement("div");
     keyboardBlock.classList.add("keyboard");
 
-    arrayKeys.forEach(arrayRow => {
+    arrayKeys.forEach((arrayRow) => {
       let rowBlock = document.createElement("div");
-      arrayRow.forEach(element => {
+      arrayRow.forEach((element) => {
         let button = document.createElement("button");
         button.classList.add("key", "button", element.keyCode);
         button.innerHTML = this.buttonValue(element);
@@ -182,7 +182,7 @@ class VirtualKeyBoard {
     document.body.appendChild(keyboardBlock);
   };
 
-  mouseDownHandler = event => {
+  mouseDownHandler = (event) => {
     let keyValue = event.target.innerText;
     event.target.classList.remove("key");
     event.target.classList.add("activeButton");
@@ -207,7 +207,7 @@ class VirtualKeyBoard {
     }
   };
 
-  keyDownHandler = event => {
+  keyDownHandler = (event) => {
     event.target.classList.remove("key");
     switch (event.key) {
       case "Shift":
@@ -219,7 +219,7 @@ class VirtualKeyBoard {
     }
   };
 
-  keyUpHandler = event => {
+  keyUpHandler = (event) => {
     event.target.tagName == "BUTTON" && event.target.classList.add("key");
     switch (event.key) {
       case "Shift":
@@ -237,10 +237,10 @@ class VirtualKeyBoard {
     }
   };
 
-  activateButton = keyObject => {
+  activateButton = (keyObject) => {
     document.querySelector(`.${keyObject.code}`).classList.add("activeButton");
   };
-  deActivateButton = keyObject => {
+  deActivateButton = (keyObject) => {
     document
       .querySelector(`.${keyObject.code}`)
       .classList.remove("activeButton");
@@ -269,7 +269,7 @@ class VirtualKeyBoard {
     }
   };
 
-  buttonValue = element => {
+  buttonValue = (element) => {
     switch (this.language) {
       case "eng":
         switch (this.caseStatus) {
@@ -309,7 +309,7 @@ class VirtualKeyBoard {
           return element.rus.down;
       }
     } else {
-      return caseRus == "up" ? element.eng.up : element.eng.down;
+      return caseRus == "up" ? element.rus.up : element.rus.down;
     }
   };
   englElementValue = (element, caseEng) => {
